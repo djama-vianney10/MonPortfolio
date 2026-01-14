@@ -71,7 +71,7 @@ export interface ProjectFormData {
   title: string
   description: string
   longDesc?: string
-  imageUrl: string
+  imageFile: string
   demoUrl?: string
   githubUrl?: string
   technologies: string[]

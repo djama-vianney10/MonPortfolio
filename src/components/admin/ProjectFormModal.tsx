@@ -32,7 +32,7 @@ export default function ProjectFormModal({ project, onClose }: ProjectFormModalP
         title: project.title,
         description: project.description,
         longDesc: project.longDesc || '',
-        imageUrl: project.imageUrl,
+        imageUrl: project.imageUrl || '',
         demoUrl: project.demoUrl || '',
         githubUrl: project.githubUrl || '',
         technologies: project.technologies.join(', '),
@@ -137,7 +137,18 @@ export default function ProjectFormModal({ project, onClose }: ProjectFormModalP
             label="Image URL"
             name="imageUrl"
             value={formData.imageUrl}
-            onChange={handleChange}
+            onChange={(e) => {
+                if (!e.target.files?.[0]) return
+                setFormData((prev) => ({
+                    ...prev,
+                    imageFile: e.target.files![0]
+                }))
+            }}
+            className="w-full text-sm text-gray-300
+            file:mr-4 file:py-2 file:px-4
+            file:rounded-lg file:border-0
+            file:bg-blue-600 file:text-white
+            hover:file:bg-blue-700"
             required
           />
 

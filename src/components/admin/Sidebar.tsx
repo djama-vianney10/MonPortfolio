@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   User,
+  ExternalLink,
 } from 'lucide-react'
 
 interface SidebarProps {
@@ -107,6 +108,17 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                 </Link>
               )
             })}
+
+            {/* View Site Button */}
+            <a
+              href="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 px-4 py-3 rounded-lg text-green-400 hover:bg-green-900/20 hover:text-green-300 transition-all mt-4 border border-green-800/30"
+            >
+              <ExternalLink size={20} />
+              <span className="whitespace-nowrap">View Site</span>
+            </a>
           </nav>
 
           {/* Logout */}

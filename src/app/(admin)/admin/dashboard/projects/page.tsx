@@ -93,7 +93,7 @@ export default function AdminProjectsPage() {
               className="bg-gray-900 rounded-xl border border-gray-800 overflow-hidden group hover:border-gray-700 transition-all"
             >
               <div className="relative h-48 bg-gradient-to-br from-blue-600 to-purple-600">
-                {project.imageUrl ? (
+                {project.imageUrl? (
                   <img
                     src={project.imageUrl}
                     alt={project.title}

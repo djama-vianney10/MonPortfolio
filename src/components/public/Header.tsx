@@ -9,6 +9,23 @@ export default function Header() {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [darkMode, setDarkMode] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Hydration fix - évite les problèmes de mismatch SSR/Client
+  useEffect(() => {
+    setMounted(true)
+    // Charger la préférence dark mode depuis localStorage
+    const savedTheme = localStorage.getItem('theme')
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      setDarkMode(true)
+      document.documentElement.classList.add('dark')
+    } else {
+      setDarkMode(false)
+      document.documentElement.classList.remove('dark')
+    }
+  }, [])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,13 +35,18 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  useEffect(() => {
+  // Toggle dark mode et sauvegarder la préférence
+  const toggleDarkMode = () => {
     if (darkMode) {
-      document.documentElement.classList.add('dark')
-    } else {
       document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+      setDarkMode(false)
+    } else {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+      setDarkMode(true)
     }
-  }, [darkMode])
+  }
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -33,6 +55,11 @@ export default function Header() {
     { name: 'Experience', href: '/experience' },
     { name: 'Contact', href: '/contact' },
   ]
+
+  // Éviter le flash pendant l'hydration
+  if (!mounted) {
+    return null
+  }
 
   return (
     <header
@@ -58,7 +85,7 @@ export default function Header() {
               </Link>
             ))}
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Toggle dark mode"
             >
@@ -69,7 +96,7 @@ export default function Header() {
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-2">
             <button
-              onClick={() => setDarkMode(!darkMode)}
+              onClick={toggleDarkMode}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
               aria-label="Toggle dark mode"
             >

@@ -1,13 +1,13 @@
 // src/app/layout.tsx
-import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
+import { Metadata } from 'next'
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'Portfolio | Full-Stack Developer',
-  description: 'Modern portfolio showcasing my projects and skills',
+  title: 'Portfolio - Full Stack Developer',
+  description: 'Modern portfolio showcasing projects, skills, and experience',
 }
 
 export default function RootLayout({
@@ -17,22 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                  document.documentElement.classList.add('dark')
-                } else {
-                  document.documentElement.classList.remove('dark')
-                }
-              } catch (_) {}
-            `,
-          }}
-        />
-      </head>
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className} suppressHydrationWarning>
+          {children}
+      </body>
     </html>
   )
 }

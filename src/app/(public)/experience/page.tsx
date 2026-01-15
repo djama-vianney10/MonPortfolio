@@ -104,7 +104,7 @@ export default function ExperiencePage() {
                         )}
                       </div>
 
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      <p className="text-gray-600 dark:text-gray-400 mb-4 break-words overflow-hidden whitespace-normal">
                         {exp.description}
                       </p>
 

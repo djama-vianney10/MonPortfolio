@@ -50,9 +50,12 @@ export default function SkillFormModal({ skill, onClose }: SkillFormModalProps) 
 
       if (res.ok) {
         onClose()
+      } else {
+        throw new Error('Failed to save skill')
       }
     } catch (error) {
       console.error('Failed to save skill:', error)
+      alert(error instanceof Error ? error.message : 'An error occurred')
     } finally {
       setLoading(false)
     }
@@ -62,7 +65,7 @@ export default function SkillFormModal({ skill, onClose }: SkillFormModalProps) 
     const { name, value, type } = e.target
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'number' ? parseInt(value) : value,
+      [name]: type === 'number' || type === 'range' ? Number(value) : value,
     }))
   }
 
@@ -113,6 +116,11 @@ export default function SkillFormModal({ skill, onClose }: SkillFormModalProps) 
               onChange={handleChange}
               className="w-full h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-blue-600"
             />
+            <div className="flex justify-between text-xs text-gray-500 mt-1">
+              <span>Beginner</span>
+              <span>Intermediate</span>
+              <span>Expert</span>
+            </div>
           </div>
 
           <Input

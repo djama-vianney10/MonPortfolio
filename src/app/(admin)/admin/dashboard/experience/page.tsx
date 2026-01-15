@@ -111,7 +111,7 @@ export default function AdminExperiencePage() {
                 )}
               </div>
 
-              <p className="text-gray-400 mb-4">{exp.description}</p>
+              <p className="text-gray-400 mb-4 break-words overflow-hidden whitespace-normal">{exp.description}</p>
 
               {exp.technologies.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">

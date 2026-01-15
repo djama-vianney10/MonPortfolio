@@ -61,7 +61,7 @@ export default function SkillsPage() {
             ))}
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-6 ">
             {Object.entries(groupedSkills).map(([category, categorySkills], index) => (
               <motion.div
                 key={category}
@@ -72,7 +72,7 @@ export default function SkillsPage() {
                 <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
                   {category}
                 </h2>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="">
                   {categorySkills.map((skill) => (
                     <Card key={skill.id} hover>
                       <div className="flex items-center justify-between mb-3">

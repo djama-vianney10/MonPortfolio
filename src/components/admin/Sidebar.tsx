@@ -1,6 +1,7 @@
 // src/components/admin/Sidebar.tsx
 'use client'
 
+import { useState, useEffect } from 'react'
 import { signOut, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -24,6 +25,11 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
   const pathname = usePathname()
   const { data: session } = useSession()
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const navigation = [
     {
@@ -48,6 +54,10 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
     },
   ]
 
+  if (!mounted) {
+    return null
+  }
+
   return (
     <>
       <aside
@@ -65,6 +75,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
               <button
                 onClick={() => setIsOpen(!isOpen)}
                 className="p-2 rounded-lg hover:bg-gray-800 transition-colors"
+                aria-label="Close sidebar"
               >
                 <ChevronLeft size={20} />
               </button>
@@ -74,7 +85,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           {/* User Info */}
           <div className="p-6 border-b border-gray-800">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
                 <User size={20} />
               </div>
               <div className="flex-1 min-w-0">
@@ -82,7 +93,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
                   {session?.user?.name || 'Admin'}
                 </p>
                 <p className="text-xs text-gray-400 truncate">
-                  {session?.user?.email}
+                  {session?.user?.email || 'admin@portfolio.com'}
                 </p>
               </div>
             </div>
@@ -124,7 +135,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
           {/* Logout */}
           <div className="p-4 border-t border-gray-800">
             <button
-              onClick={() => signOut({ callbackUrl: '/login' })}
+              onClick={() => signOut({ callbackUrl: '/admin/login' })}
               className="flex items-center gap-3 px-4 py-3 rounded-lg text-red-400 hover:bg-red-900/20 hover:text-red-300 transition-all w-full"
             >
               <LogOut size={20} />
@@ -139,6 +150,7 @@ export default function Sidebar({ isOpen, setIsOpen }: SidebarProps) {
         <button
           onClick={() => setIsOpen(true)}
           className="fixed top-4 left-4 z-50 p-3 rounded-lg bg-gray-900 border border-gray-800 hover:bg-gray-800 transition-colors"
+          aria-label="Open sidebar"
         >
           <ChevronRight size={20} />
         </button>

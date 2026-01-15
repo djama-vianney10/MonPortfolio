@@ -42,6 +42,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Convertir order en nombre
+    const orderValue = typeof body.order === 'string' 
+      ? parseInt(body.order, 10) 
+      : body.order
+
     const project = await prisma.project.create({
       data: {
         title: body.title,
@@ -52,7 +57,7 @@ export async function POST(request: NextRequest) {
         githubUrl: body.githubUrl || '',
         technologies: body.technologies || [],
         featured: body.featured || false,
-        order: body.order || 0,
+        order: orderValue || 0,
       },
     })
 

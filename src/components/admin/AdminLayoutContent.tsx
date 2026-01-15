@@ -2,8 +2,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
 import Sidebar from '@/components/admin/Sidebar'
 
 export default function AdminLayoutContent({
@@ -11,29 +9,13 @@ export default function AdminLayoutContent({
 }: {
   children: React.ReactNode
 }) {
-  const { data: session, status } = useSession()
-  const router = useRouter()
+
+  
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/login')
-    }
-  }, [status, router])
 
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-950">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    )
-  }
 
-  if (!session) {
-    return null
-  }
-
-  return (
+return (
     <div className="min-h-screen bg-gray-950 text-white">
       <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       <div

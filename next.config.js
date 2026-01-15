@@ -1,20 +1,24 @@
-// next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  
   images: {
-    domains: ['localhost', 'images.unsplash.com', 'via.placeholder.com'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
+    domains: ['localhost'],
+    formats: ['image/avif', 'image/webp'],
   },
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
+
+  transpilePackages: ['lucide-react', 'framer-motion'],
+  
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      }
+    }
+    return config
   },
 }
 

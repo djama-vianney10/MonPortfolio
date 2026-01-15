@@ -11,6 +11,7 @@ export async function GET() {
     })
     return NextResponse.json(skills)
   } catch (error) {
+    console.error('GET /api/skills error:', error)
     return NextResponse.json(
       { error: 'Failed to fetch skills' },
       { status: 500 }
@@ -26,12 +27,37 @@ export async function POST(request: NextRequest) {
     }
 
     const body = await request.json()
+
+    // Validation
+    if (!body.name || !body.category) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
+
+    // Convertir les valeurs numériques
+    const levelValue = typeof body.level === 'string' 
+      ? parseInt(body.level, 10) 
+      : body.level
+
+    const orderValue = typeof body.order === 'string' 
+      ? parseInt(body.order, 10) 
+      : body.order
+
     const skill = await prisma.skill.create({
-      data: body,
+      data: {
+        name: body.name,
+        category: body.category,
+        level: levelValue || 0,
+        icon: body.icon || '',
+        order: orderValue || 0,
+      },
     })
 
     return NextResponse.json(skill, { status: 201 })
   } catch (error) {
+    console.error('POST /api/skills error:', error)
     return NextResponse.json(
       { error: 'Failed to create skill' },
       { status: 500 }

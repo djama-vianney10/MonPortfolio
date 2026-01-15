@@ -86,11 +86,11 @@ export default function AdminSkillsPage() {
           <Button onClick={() => setIsModalOpen(true)}>Add your first skill</Button>
         </div>
       ) : (
-        <div className="space-y-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-6 ">
           {Object.entries(groupedSkills).map(([category, categorySkills]) => (
             <div key={category}>
               <h2 className="text-2xl font-bold mb-4">{category}</h2>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="">
                 {categorySkills.map((skill) => (
                   <div
                     key={skill.id}

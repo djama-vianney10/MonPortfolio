@@ -10,82 +10,107 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
         
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center max-w-4xl mx-auto"
-          >
+        <div className="container-fluid md:container mx-auto px-4 sm:px-6 lg:px-8 xl:container relative z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Colonne gauche - Contenu */}
             <motion.div
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-              className="inline-block mb-6"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6 }}
+              className="max-w-2xl"
             >
-              <span className="px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium">
-                👋 Welcome to my portfolio
-              </span>
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
+                className="inline-block mb-6"
+              >
+                <span className="px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium">
+                  👋 Welcome to my portfolio ! Je suis Djama Anthony Vianney
+                </span>
+              </motion.div>
+
+              <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gray-900 dark:text-white">
+                Building Digital
+                <span className="text-gradient block mt-2">Experiences</span>
+              </h1>
+
+              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">
+                Full-Stack Developer crafting modern, scalable, and beautiful web applications with cutting-edge technologies.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-start gap-4">
+                <Link href="/projects">
+                  <Button size="lg" className="group">
+                    View Projects
+                    <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                  </Button>
+                </Link>
+                <Link href="/contact">
+                  <Button  size="lg">
+                    Get in Touch
+                  </Button>
+                </Link>
+              </div>
             </motion.div>
 
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gray-900 dark:text-white">
-              Building Digital
-              <span className="text-gradient block mt-2">Experiences</span>
-            </h1>
+            {/* Colonne droite - Espace pour image/illustration future */}
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              className="hidden lg:flex items-center justify-center relative"
+            >
+              {/* Placeholder pour image future */}
+              <div className="relative w-full h-[500px] rounded-2xl overflow-hidden bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 backdrop-blur-sm border border-gray-200 dark:border-gray-700 flex items-center justify-center">
+                <div className="text-center">
+                  <Code className="mx-auto mb-4 text-blue-500 dark:text-blue-400" size={80} />
+                  <p className="text-gray-500 dark:text-gray-400 text-lg font-medium">
+                    <img
+                      src="/images/hero-photo.jfif"
+                      alt="Djama Vianney"
+                      className="w-full h-full object-cover"
+                    />
+                  </p>
+                </div>
+              </div>
 
-            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-              Full-Stack Developer crafting modern, scalable, and beautiful web applications with cutting-edge technologies.
-            </p>
+              {/* Floating Elements autour */}
+              <motion.div
+                animate={{
+                  y: [0, -20, 0],
+                  rotate: [0, 5, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className="absolute top-10 -left-10 text-blue-500 opacity-20"
+              >
+                <Code size={60} />
+              </motion.div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link href="/projects">
-                <Button size="lg" className="group">
-                  View Projects
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button variant="outline" size="lg">
-                  Get in Touch
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+              <motion.div
+                animate={{
+                  y: [0, 20, 0],
+                  rotate: [0, -5, 0],
+                }}
+                transition={{
+                  duration: 5,
+                  repeat: Infinity,
+                  ease: 'easeInOut',
+                }}
+                className="absolute bottom-10 -right-10 text-purple-500 opacity-20"
+              >
+                <Sparkles size={60} />
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
-
-        {/* Floating Elements */}
-        <motion.div
-          animate={{
-            y: [0, -20, 0],
-            rotate: [0, 5, 0],
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          className="absolute top-20 left-10 text-blue-500 opacity-20"
-        >
-          <Code size={60} />
-        </motion.div>
-
-        <motion.div
-          animate={{
-            y: [0, 20, 0],
-            rotate: [0, -5, 0],
-          }}
-          transition={{
-            duration: 5,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          className="absolute bottom-20 right-10 text-purple-500 opacity-20"
-        >
-          <Sparkles size={60} />
-        </motion.div>
       </section>
 
       {/* Features Section */}

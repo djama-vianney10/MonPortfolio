@@ -66,6 +66,18 @@ export interface Experience {
   updatedAt: Date
 }
 
+// Contact Types
+export interface Contact {
+  id: string
+  name: string
+  email: string
+  subject: string
+  message: string
+  status: 'NEW' | 'READ' | 'ARCHIVED'
+  createdAt: Date
+  updatedAt: Date
+}
+
 // Form Types
 export interface ProjectFormData {
   title: string
@@ -96,6 +108,12 @@ export interface ExperienceFormData {
   technologies: string[]
 }
 
+export interface ContactFormData {
+  name: string
+  email: string
+  subject: string
+  message: string
+}
 
 export interface StatsCardProps {
   title: string

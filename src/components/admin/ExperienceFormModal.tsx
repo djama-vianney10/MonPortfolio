@@ -70,9 +70,12 @@ export default function ExperienceFormModal({ experience, onClose }: ExperienceF
 
       if (res.ok) {
         onClose()
+      } else {
+        throw new Error('Failed to save experience')
       }
     } catch (error) {
       console.error('Failed to save experience:', error)
+      alert(error instanceof Error ? error.message : 'An error occurred')
     } finally {
       setLoading(false)
     }
@@ -82,7 +85,11 @@ export default function ExperienceFormModal({ experience, onClose }: ExperienceF
     const { name, value, type } = e.target
     setFormData((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+      [name]: type === 'checkbox' 
+        ? (e.target as HTMLInputElement).checked 
+        : type === 'number'
+        ? Number(value)
+        : value,
     }))
   }
 

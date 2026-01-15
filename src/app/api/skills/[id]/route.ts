@@ -15,13 +15,38 @@ export async function PUT(
     }
 
     const body = await request.json()
+
+    // Validation
+    if (!body.name || !body.category) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      )
+    }
+
+    // Convertir les valeurs numériques
+    const levelValue = typeof body.level === 'string' 
+      ? parseInt(body.level, 10) 
+      : body.level
+
+    const orderValue = typeof body.order === 'string' 
+      ? parseInt(body.order, 10) 
+      : body.order
+
     const skill = await prisma.skill.update({
       where: { id: params.id },
-      data: body,
+      data: {
+        name: body.name,
+        category: body.category,
+        level: levelValue || 0,
+        icon: body.icon || '',
+        order: orderValue || 0,
+      },
     })
 
     return NextResponse.json(skill)
   } catch (error) {
+    console.error('PUT /api/skills/[id] error:', error)
     return NextResponse.json(
       { error: 'Failed to update skill' },
       { status: 500 }
@@ -45,6 +70,7 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
+    console.error('DELETE /api/skills/[id] error:', error)
     return NextResponse.json(
       { error: 'Failed to delete skill' },
       { status: 500 }

@@ -13,7 +13,7 @@ export default function Footer() {
 
   const socialLinks = [
     { icon: Github, href: 'https://github.com/djama-vianney10', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://linkedin.com', label: 'LinkedIn' },
+    { icon: Linkedin, href: 'https://www.linkedin.com/in/vianney-djama-704686360/', label: 'LinkedIn' },
     { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
     { icon: Mail, href: 'mailto:djamavianney58@gmail.com', label: 'Email' },
   ]
@@ -27,7 +27,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="text-center md:text-left">
             <p className="text-gray-600 dark:text-gray-400" suppressHydrationWarning>
-              © {currentYear} Portfolio. All rights reserved.
+              © {currentYear} Djama Anthony Vianney. Développeur Full Stack | Abidjan, Côte D'Ivoire
             </p>
           </div>
 
@@ -43,7 +43,7 @@ export default function Footer() {
                   className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
                   aria-label={social.label}
                 >
-                  <Icon size={20} />
+                  <Icon size={30} />
                 </a>
               )
             })}

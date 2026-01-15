@@ -3,19 +3,19 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { prismaRetry } from '@/lib/prisma-retry'
 
 export async function GET() {
   try {
-    const experiences = await prisma.experience.findMany({
-      orderBy: [{ current: 'desc' }, { startDate: 'desc' }],
-    })
-    return NextResponse.json(experiences)
-  } catch (error) {
-    console.error('GET /api/experience error:', error)
-    return NextResponse.json(
-      { error: 'Failed to fetch experiences' },
-      { status: 500 }
+    const skills = await prismaRetry(
+      () => prisma.skill.findMany({
+        orderBy: { order: 'asc' },
+      })
     )
+    return NextResponse.json(skills)
+  } catch (error) {
+    console.error('GET /api/skills error:', error)
+    return NextResponse.json({ error: 'Failed to fetch skills' }, { status: 500 })
   }
 }
 

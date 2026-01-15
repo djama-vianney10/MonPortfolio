@@ -1,8 +1,10 @@
-// src/app/api/projects/[id]/route.ts
+// 3. MODIFIER: src/app/api/projects/[id]/route.ts - AVEC RETRY
+// ========================================
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { prismaRetry } from '@/lib/prisma-retry'
 
 export async function PUT(
   request: NextRequest,
@@ -29,20 +31,24 @@ export async function PUT(
       ? parseInt(body.order, 10) 
       : body.order
 
-    const project = await prisma.project.update({
-      where: { id: params.id },
-      data: {
-        title: body.title,
-        description: body.description,
-        longDesc: body.longDesc || '',
-        imageUrl: body.imageUrl,
-        demoUrl: body.demoUrl || '',
-        githubUrl: body.githubUrl || '',
-        technologies: body.technologies || [],
-        featured: body.featured || false,
-        order: orderValue || 0,
-      },
-    })
+    // Utiliser prismaRetry pour gérer les déconnexions
+    const project = await prismaRetry(
+      () => prisma.project.update({
+        where: { id: params.id },
+        data: {
+          title: body.title,
+          description: body.description,
+          longDesc: body.longDesc || '',
+          imageUrl: body.imageUrl,
+          demoUrl: body.demoUrl || '',
+          githubUrl: body.githubUrl || '',
+          technologies: body.technologies || [],
+          featured: body.featured || false,
+          order: orderValue || 0,
+        },
+      }),
+      { maxRetries: 3, retryDelay: 500 }
+    )
 
     return NextResponse.json(project)
   } catch (error) {
@@ -64,9 +70,12 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    await prisma.project.delete({
-      where: { id: params.id },
-    })
+    await prismaRetry(
+      () => prisma.project.delete({
+        where: { id: params.id },
+      }),
+      { maxRetries: 3, retryDelay: 500 }
+    )
 
     return NextResponse.json({ success: true })
   } catch (error) {

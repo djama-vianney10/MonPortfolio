@@ -1,4 +1,5 @@
-// src/app/(admin)/admin/dashboard/skills/page.tsx
+// 5. MODIFIER: src/app/(admin)/admin/dashboard/skills/page.tsx
+// ========================================
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -8,12 +9,14 @@ import Button from '@/components/ui/Button'
 import SkillFormModal from '@/components/admin/SkillFormModal'
 
 export default function AdminSkillsPage() {
+  const [mounted, setMounted] = useState(false)
   const [skills, setSkills] = useState<Skill[]>([])
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingSkill, setEditingSkill] = useState<Skill | null>(null)
 
   useEffect(() => {
+    setMounted(true)
     fetchSkills()
   }, [])
 
@@ -61,6 +64,19 @@ export default function AdminSkillsPage() {
     return acc
   }, {} as Record<string, Skill[]>)
 
+  if (!mounted) {
+    return (
+      <div className="space-y-6">
+        <div className="h-12 bg-gray-800 rounded animate-pulse" />
+        <div className="space-y-6">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-64 rounded-xl bg-gray-800 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -86,11 +102,11 @@ export default function AdminSkillsPage() {
           <Button onClick={() => setIsModalOpen(true)}>Add your first skill</Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-6 ">
+        <div className="space-y-8">
           {Object.entries(groupedSkills).map(([category, categorySkills]) => (
             <div key={category}>
               <h2 className="text-2xl font-bold mb-4">{category}</h2>
-              <div className="">
+              <div className="grid gap-4">
                 {categorySkills.map((skill) => (
                   <div
                     key={skill.id}

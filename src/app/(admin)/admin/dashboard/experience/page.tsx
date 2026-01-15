@@ -1,4 +1,5 @@
-// src/app/(admin)/admin/dashboard/experience/page.tsx
+// 6. MODIFIER: src/app/(admin)/admin/dashboard/experience/page.tsx
+// ========================================
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -9,12 +10,14 @@ import Button from '@/components/ui/Button'
 import ExperienceFormModal from '@/components/admin/ExperienceFormModal'
 
 export default function AdminExperiencePage() {
+  const [mounted, setMounted] = useState(false)
   const [experiences, setExperiences] = useState<Experience[]>([])
   const [loading, setLoading] = useState(true)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingExp, setEditingExp] = useState<Experience | null>(null)
 
   useEffect(() => {
+    setMounted(true)
     fetchExperiences()
   }, [])
 
@@ -52,6 +55,19 @@ export default function AdminExperiencePage() {
     setIsModalOpen(false)
     setEditingExp(null)
     fetchExperiences()
+  }
+
+  if (!mounted) {
+    return (
+      <div className="space-y-6">
+        <div className="h-12 bg-gray-800 rounded animate-pulse" />
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} className="h-48 rounded-xl bg-gray-800 animate-pulse" />
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -111,7 +127,9 @@ export default function AdminExperiencePage() {
                 )}
               </div>
 
-              <p className="text-gray-400 mb-4 break-words overflow-hidden whitespace-normal">{exp.description}</p>
+              <p className="text-gray-400 mb-4 break-words overflow-hidden whitespace-normal">
+                {exp.description}
+              </p>
 
               {exp.technologies.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">

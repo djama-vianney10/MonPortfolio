@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import ProjectCard from '@/components/public/ProjectCard'
 import { Project } from '@/types'
+import ContactPage from '../contact/page'
 
 export default function ProjectsPage() {
   const [projects, setProjects] = useState<Project[]>([])
@@ -66,6 +67,7 @@ export default function ProjectsPage() {
           </div>
         )}
       </div>
+      <ContactPage />
     </div>
   )
 }

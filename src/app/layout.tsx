@@ -1,7 +1,10 @@
-// src/app/layout.tsx
+// ========================================
+// 1. src/app/layout.tsx - ROOT LAYOUT FIXÉ
+// ========================================
 import { Inter } from 'next/font/google'
 import { Metadata } from 'next'
 import './globals.css'
+import ThemeScript from '@/components/ThemeScript'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,8 +20,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <ThemeScript />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
-          {children}
+        {children}
       </body>
     </html>
   )

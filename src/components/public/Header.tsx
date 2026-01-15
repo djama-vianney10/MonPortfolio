@@ -1,4 +1,3 @@
-// src/components/public/Header.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
@@ -13,7 +12,6 @@ export default function Header() {
   const [mounted, setMounted] = useState(false)
   const pathname = usePathname()
 
-  // Hydration fix
   useEffect(() => {
     setMounted(true)
     const isDark = document.documentElement.classList.contains('dark')
@@ -28,10 +26,16 @@ export default function Header() {
 
   const toggleDarkMode = () => {
     if (!mounted) return
-    document.documentElement.classList.toggle('dark')
-    const isDark = document.documentElement.classList.contains('dark')
-    localStorage.setItem('theme', isDark ? 'dark' : 'light')
-    setDarkMode(isDark)
+    const newDarkMode = !darkMode
+    setDarkMode(newDarkMode)
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
   }
 
   const navigation = [
@@ -42,15 +46,12 @@ export default function Header() {
     { name: 'Contact', href: '/contact' },
   ]
 
-  // Éviter le flash pendant l'hydratation
   if (!mounted) {
     return (
-      <header className="fixed top-0 left-0 right-0 z-50 bg-transparent">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm">
         <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
-            <div className="text-2xl font-bold text-gradient">
-              Djamx | I Code
-            </div>
+            <div className="w-32 h-8 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
             <div className="hidden md:flex items-center space-x-8">
               {navigation.map((item) => (
                 <div key={item.href} className="w-16 h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse" />
@@ -92,6 +93,7 @@ export default function Header() {
 
             <div className="h-6 w-px bg-gray-300 dark:bg-gray-600" />
 
+            {/* CHANGÉ: /admin/login -> /login */}
             <Link
               href="/login"
               className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"
@@ -149,6 +151,7 @@ export default function Header() {
               
               <div className="h-px bg-gray-300 dark:bg-gray-600 my-2" />
               
+              {/* CHANGÉ: /admin/login -> /login */}
               <Link
                 href="/login"
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-700 dark:text-gray-300"

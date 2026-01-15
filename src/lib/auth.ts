@@ -60,7 +60,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/login',
+    signIn: '/login', // CHANGÉ: /admin/login -> /login
   },
   session: {
     strategy: 'jwt',

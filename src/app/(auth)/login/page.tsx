@@ -1,7 +1,9 @@
-// src/app/(admin)/login/page.tsx
+// ========================================
+// 3. src/app/(admin)/login/page.tsx - FIXÉ
+// ========================================
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { LogIn } from 'lucide-react'
@@ -12,12 +14,17 @@ import Card from '@/components/ui/Card'
 
 export default function LoginPage() {
   const router = useRouter()
+  const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [credentials, setCredentials] = useState({
     email: '',
     password: '',
   })
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -33,12 +40,13 @@ export default function LoginPage() {
 
       if (result?.error) {
         setError('Invalid email or password')
-      } else {
-        router.push('/admin/dashboard')
+        setLoading(false)
+      } else if (result?.ok) {
+        // Redirection immédiate avec window.location pour éviter les problèmes d'hydratation
+        window.location.href = '/admin/dashboard'
       }
     } catch (err) {
       setError('An error occurred. Please try again.')
-    } finally {
       setLoading(false)
     }
   }
@@ -48,6 +56,14 @@ export default function LoginPage() {
       ...prev,
       [e.target.name]: e.target.value,
     }))
+  }
+
+  if (!mounted) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <div className="w-full max-w-md h-96 bg-gray-800 rounded-xl animate-pulse"></div>
+      </div>
+    )
   }
 
   return (

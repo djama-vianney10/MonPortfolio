@@ -1,25 +1,17 @@
-// src/app/api/upload/route.ts
+// 1. CRÉER: src/app/api/upload/route.ts
+// ========================================
 import { NextRequest, NextResponse } from 'next/server'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
+import path from 'path'
 
 export async function POST(request: NextRequest) {
   try {
-    // Vérifier l'authentification
-    const session = await getServerSession(authOptions)
-    if (!session) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 })
-    }
-
     const formData = await request.formData()
     const file = formData.get('file') as File
-
+    
     if (!file) {
       return NextResponse.json(
-        { error: 'Aucun fichier fourni' },
+        { error: 'No file provided' },
         { status: 400 }
       )
     }
@@ -27,49 +19,34 @@ export async function POST(request: NextRequest) {
     // Vérifier le type de fichier
     if (!file.type.startsWith('image/')) {
       return NextResponse.json(
-        { error: 'Le fichier doit être une image' },
+        { error: 'File must be an image' },
         { status: 400 }
       )
     }
 
-    // Vérifier la taille (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      return NextResponse.json(
-        { error: 'L\'image ne doit pas dépasser 5MB' },
-        { status: 400 }
-      )
-    }
-
-    // Créer un nom de fichier unique
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
+    // Créer le dossier uploads/projects s'il n'existe pas
+    const uploadsDir = path.join(process.cwd(), 'public', 'uploads', 'projects')
+    await mkdir(uploadsDir, { recursive: true })
 
     // Générer un nom de fichier unique
     const timestamp = Date.now()
-    const originalName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_')
-    const fileName = `${timestamp}-${originalName}`
+    const originalName = file.name.replace(/\s+/g, '-')
+    const filename = `${timestamp}-${originalName}`
+    const filepath = path.join(uploadsDir, filename)
 
-    // Définir le chemin de sauvegarde
-    const uploadDir = join(process.cwd(), 'public', 'uploads', 'projects')
-    
-    // Créer le dossier s'il n'existe pas
-    if (!existsSync(uploadDir)) {
-      await mkdir(uploadDir, { recursive: true })
-    }
-
-    const filePath = join(uploadDir, fileName)
-
-    // Sauvegarder le fichier
-    await writeFile(filePath, buffer)
+    // Convertir le fichier en Buffer et sauvegarder
+    const bytes = await file.arrayBuffer()
+    const buffer = Buffer.from(bytes)
+    await writeFile(filepath, buffer)
 
     // Retourner l'URL publique
-    const url = `/uploads/projects/${fileName}`
-
+    const url = `/uploads/projects/${filename}`
+    
     return NextResponse.json({ url }, { status: 200 })
   } catch (error) {
-    console.error('Erreur lors de l\'upload:', error)
+    console.error('Upload error:', error)
     return NextResponse.json(
-      { error: 'Échec du téléchargement de l\'image' },
+      { error: 'Failed to upload file' },
       { status: 500 }
     )
   }

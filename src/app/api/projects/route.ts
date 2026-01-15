@@ -1,8 +1,10 @@
-// src/app/api/projects/route.ts
+// 4. MODIFIER: src/app/api/projects/route.ts - AVEC RETRY
+// ========================================
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { prismaRetry } from '@/lib/prisma-retry'
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,10 +12,13 @@ export async function GET(request: NextRequest) {
     const featuredParam = searchParams.get('featured')
     const featured = featuredParam === 'true' ? true : undefined
 
-    const projects = await prisma.project.findMany({
-      where: featured ? { featured } : undefined,
-      orderBy: { order: 'asc' },
-    })
+    const projects = await prismaRetry(
+      () => prisma.project.findMany({
+        where: featured ? { featured } : undefined,
+        orderBy: { order: 'asc' },
+      }),
+      { maxRetries: 3, retryDelay: 500 }
+    )
 
     return NextResponse.json(projects)
   } catch (error) {
@@ -47,19 +52,22 @@ export async function POST(request: NextRequest) {
       ? parseInt(body.order, 10) 
       : body.order
 
-    const project = await prisma.project.create({
-      data: {
-        title: body.title,
-        description: body.description,
-        longDesc: body.longDesc || '',
-        imageUrl: body.imageUrl,
-        demoUrl: body.demoUrl || '',
-        githubUrl: body.githubUrl || '',
-        technologies: body.technologies || [],
-        featured: body.featured || false,
-        order: orderValue || 0,
-      },
-    })
+    const project = await prismaRetry(
+      () => prisma.project.create({
+        data: {
+          title: body.title,
+          description: body.description,
+          longDesc: body.longDesc || '',
+          imageUrl: body.imageUrl,
+          demoUrl: body.demoUrl || '',
+          githubUrl: body.githubUrl || '',
+          technologies: body.technologies || [],
+          featured: body.featured || false,
+          order: orderValue || 0,
+        },
+      }),
+      { maxRetries: 3, retryDelay: 500 }
+    )
 
     return NextResponse.json(project, { status: 201 })
   } catch (error) {

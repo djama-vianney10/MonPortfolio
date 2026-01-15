@@ -1,12 +1,15 @@
-// src/components/public/ContactForm.tsx
+// ========================================
+// 5. src/components/public/ContactForm.tsx - FIXÉ
+// ========================================
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Send } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 
 export default function ContactForm() {
+  const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [formData, setFormData] = useState({
@@ -15,6 +18,10 @@ export default function ContactForm() {
     subject: '',
     message: '',
   })
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -44,6 +51,16 @@ export default function ContactForm() {
       ...prev,
       [e.target.name]: e.target.value,
     }))
+  }
+
+  if (!mounted) {
+    return (
+      <div className="space-y-6">
+        <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+        <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+        <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse" />
+      </div>
+    )
   }
 
   return (
@@ -95,7 +112,7 @@ export default function ContactForm() {
       {success && (
         <div className="p-4 rounded-lg bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800">
           <p className="text-green-600 dark:text-green-400 font-medium">
-            ✓ Message sent successfully! I ll get back to you soon.
+            ✓ Message sent successfully! I'll get back to you soon.
           </p>
         </div>
       )}

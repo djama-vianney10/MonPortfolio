@@ -1,4 +1,5 @@
-// src/app/(public)/experience/page.tsx
+// 3. CORRIGER: src/app/(public)/experience/page.tsx - FIX HYDRATATION
+// ========================================
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -9,10 +10,12 @@ import { formatDateShort } from '@/lib/utils'
 import Card from '@/components/ui/Card'
 
 export default function ExperiencePage() {
+  const [mounted, setMounted] = useState(false)
   const [experiences, setExperiences] = useState<Experience[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    setMounted(true)
     fetchExperiences()
   }, [])
 
@@ -26,6 +29,25 @@ export default function ExperiencePage() {
     } finally {
       setLoading(false)
     }
+  }
+
+  // Skeleton pendant le chargement côté client
+  if (!mounted) {
+    return (
+      <div className="min-h-screen py-20 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+          <div className="text-center mb-16">
+            <div className="h-12 w-64 bg-gray-200 dark:bg-gray-700 rounded mx-auto mb-4 animate-pulse" />
+            <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded mx-auto animate-pulse" />
+          </div>
+          <div className="space-y-6">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="h-64 rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse" />
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -53,6 +75,13 @@ export default function ExperiencePage() {
                 className="h-64 rounded-xl bg-gray-200 dark:bg-gray-800 animate-pulse"
               />
             ))}
+          </div>
+        ) : experiences.length === 0 ? (
+          <div className="text-center py-20">
+            <Briefcase className="mx-auto mb-4 text-gray-400" size={64} />
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              No experience data available yet.
+            </p>
           </div>
         ) : (
           <div className="relative">
@@ -108,7 +137,7 @@ export default function ExperiencePage() {
                         {exp.description}
                       </p>
 
-                      {exp.technologies.length > 0 && (
+                      {exp.technologies && exp.technologies.length > 0 && (
                         <div className="flex flex-wrap gap-2">
                           {exp.technologies.map((tech) => (
                             <span

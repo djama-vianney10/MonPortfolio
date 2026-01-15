@@ -1,4 +1,4 @@
-// 1. CRÉER: src/components/ui/Portal.tsx
+// 1. VÉRIFIER: src/components/ui/Portal.tsx existe et est correct
 // ========================================
 'use client'
 
@@ -17,7 +17,7 @@ export default function Portal({ children }: PortalProps) {
     return () => setMounted(false)
   }, [])
 
-  if (!mounted) return null
+  if (typeof window === 'undefined' || !mounted) return null
 
   return createPortal(children, document.body)
 }

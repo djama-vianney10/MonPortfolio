@@ -7,15 +7,16 @@ import { prismaRetry } from '@/lib/prisma-retry'
 
 export async function GET() {
   try {
-    const skills = await prismaRetry(
-      () => prisma.skill.findMany({
+    // CORRECTION: C'était prisma.skill au lieu de prisma.experience !!!
+    const experiences = await prismaRetry(
+      () => prisma.experience.findMany({
         orderBy: { order: 'asc' },
       })
     )
-    return NextResponse.json(skills)
+    return NextResponse.json(experiences)
   } catch (error) {
-    console.error('GET /api/skills error:', error)
-    return NextResponse.json({ error: 'Failed to fetch skills' }, { status: 500 })
+    console.error('GET /api/experience error:', error)
+    return NextResponse.json({ error: 'Failed to fetch experiences' }, { status: 500 })
   }
 }
 
@@ -41,19 +42,21 @@ export async function POST(request: NextRequest) {
       ? parseInt(body.order, 10) 
       : body.order
 
-    const experience = await prisma.experience.create({
-      data: {
-        company: body.company,
-        position: body.position,
-        description: body.description,
-        startDate: body.startDate,
-        endDate: body.endDate || null,
-        current: body.current || false,
-        location: body.location || '',
-        technologies: body.technologies || [],
-        order: orderValue || 0,
-      },
-    })
+    const experience = await prismaRetry(
+      () => prisma.experience.create({
+        data: {
+          company: body.company,
+          position: body.position,
+          description: body.description,
+          startDate: body.startDate,
+          endDate: body.endDate || null,
+          current: body.current || false,
+          location: body.location || '',
+          technologies: body.technologies || [],
+          order: orderValue || 0,
+        },
+      })
+    )
 
     return NextResponse.json(experience, { status: 201 })
   } catch (error) {

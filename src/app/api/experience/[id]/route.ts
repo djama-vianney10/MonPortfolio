@@ -1,8 +1,10 @@
-// src/app/api/experience/[id]/route.ts
+// 2. CORRIGER: src/app/api/experience/[id]/route.ts - AVEC RETRY
+// ========================================
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { prismaRetry } from '@/lib/prisma-retry'
 
 export async function PUT(
   request: NextRequest,
@@ -29,20 +31,22 @@ export async function PUT(
       ? parseInt(body.order, 10) 
       : body.order
 
-    const experience = await prisma.experience.update({
-      where: { id: params.id },
-      data: {
-        company: body.company,
-        position: body.position,
-        description: body.description,
-        startDate: body.startDate,
-        endDate: body.endDate || null,
-        current: body.current || false,
-        location: body.location || '',
-        technologies: body.technologies || [],
-        order: orderValue || 0,
-      },
-    })
+    const experience = await prismaRetry(
+      () => prisma.experience.update({
+        where: { id: params.id },
+        data: {
+          company: body.company,
+          position: body.position,
+          description: body.description,
+          startDate: body.startDate,
+          endDate: body.endDate || null,
+          current: body.current || false,
+          location: body.location || '',
+          technologies: body.technologies || [],
+          order: orderValue || 0,
+        },
+      })
+    )
 
     return NextResponse.json(experience)
   } catch (error) {
@@ -64,9 +68,11 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    await prisma.experience.delete({
-      where: { id: params.id },
-    })
+    await prismaRetry(
+      () => prisma.experience.delete({
+        where: { id: params.id },
+      })
+    )
 
     return NextResponse.json({ success: true })
   } catch (error) {

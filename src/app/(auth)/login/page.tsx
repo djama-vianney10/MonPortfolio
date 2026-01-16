@@ -1,10 +1,8 @@
-// ========================================
-// 3. src/app/(admin)/login/page.tsx - FIXÉ
-// ========================================
+// src/app/(auth)/login/page.tsx (VERSION ALTERNATIVE)
 'use client'
 
 import { useState, useEffect } from 'react'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { LogIn } from 'lucide-react'
 import Link from 'next/link'
@@ -12,8 +10,9 @@ import Button from '@/components/ui/Button'
 import Input from '@/components/ui/Input'
 import Card from '@/components/ui/Card'
 
-export default function LoginPage() {
+export default function LoginPageV2() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [mounted, setMounted] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -25,6 +24,13 @@ export default function LoginPage() {
   useEffect(() => {
     setMounted(true)
   }, [])
+
+  // Redirection automatique si déjà connecté
+  useEffect(() => {
+    if (status === 'authenticated') {
+      router.replace('/admin/dashboard')
+    }
+  }, [status, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -42,8 +48,8 @@ export default function LoginPage() {
         setError('Invalid email or password')
         setLoading(false)
       } else if (result?.ok) {
-        // Redirection immédiate avec window.location pour éviter les problèmes d'hydratation
-        window.location.href = '/admin/dashboard'
+        // Utiliser router.replace au lieu de window.location
+        router.replace('/admin/dashboard')
       }
     } catch (err) {
       setError('An error occurred. Please try again.')
@@ -58,10 +64,25 @@ export default function LoginPage() {
     }))
   }
 
-  if (!mounted) {
+  // Skeleton pendant le chargement
+  if (!mounted || status === 'loading') {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="w-full max-w-md h-96 bg-gray-800 rounded-xl animate-pulse"></div>
+        <div className="w-full max-w-md h-96 bg-gray-800 rounded-xl animate-pulse" />
+      </div>
+    )
+  }
+
+  // Si déjà authentifié, afficher un message de redirection
+  if (status === 'authenticated') {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+        <Card className="w-full max-w-md text-center">
+          <div className="py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
+            <p className="text-gray-400">Redirecting to dashboard...</p>
+          </div>
+        </Card>
       </div>
     )
   }
@@ -91,6 +112,7 @@ export default function LoginPage() {
             placeholder="admin@example.com"
             required
             autoComplete="email"
+            disabled={loading}
           />
 
           <Input
@@ -102,6 +124,7 @@ export default function LoginPage() {
             placeholder="••••••••"
             required
             autoComplete="current-password"
+            disabled={loading}
           />
 
           {error && (
@@ -115,6 +138,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             isLoading={loading}
+            disabled={loading}
             className="w-full"
             size="lg"
           >

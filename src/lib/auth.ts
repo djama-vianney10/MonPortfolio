@@ -1,4 +1,5 @@
-// src/lib/auth.ts
+// VÉRIFIER: src/lib/auth.ts - Configuration NextAuth
+// ========================================
 import { NextAuthOptions } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import bcrypt from 'bcryptjs'
@@ -60,7 +61,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/login', // CHANGÉ: /admin/login -> /login
+    signIn: '/login',
   },
   session: {
     strategy: 'jwt',

@@ -1,9 +1,17 @@
-// 1. CRÉER: src/app/(auth)/layout.tsx - NOUVEAU LAYOUT POUR AUTH
+// VÉRIFIER: src/app/(auth)/layout.tsx
 // ========================================
+'use client'
+
+import { SessionProvider } from 'next-auth/react'
+
 export default function AuthLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  return <>{children}</>
+  return (
+    <SessionProvider>
+      {children}
+    </SessionProvider>
+  )
 }

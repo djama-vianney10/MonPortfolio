@@ -16,7 +16,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'File must be an image' }, { status: 400 })
     }
 
-    // Upload vers Vercel Blob
     const blob = await put(file.name, file, {
       access: 'public',
       addRandomSuffix: true,

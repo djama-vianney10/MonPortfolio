@@ -1,23 +1,22 @@
-import { getToken } from 'next-auth/jwt'
+// 4. VÉRIFIER: middleware.ts (À LA RACINE)
+// ========================================
+import { withAuth } from 'next-auth/middleware'
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 
-export async function middleware(req: NextRequest) {
-  const token = await getToken({ req })
-  const isAdminRoute = req.nextUrl.pathname.startsWith('/admin')
-  const isLoginPage = req.nextUrl.pathname === '/login'
-
-  if (isAdminRoute && !token) {
-    return NextResponse.redirect(new URL('/login', req.url))
+export default withAuth(
+  function middleware(req) {
+    return NextResponse.next()
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
+    },
+    pages: {
+      signIn: '/login',
+    },
   }
-
-  if (isLoginPage && token) {
-    return NextResponse.redirect(new URL('/admin/dashboard', req.url))
-  }
-
-  return NextResponse.next()
-}
+)
 
 export const config = {
-  matcher: ['/admin/:path*', '/login'],
+  matcher: ['/admin/:path*'],
 }

@@ -86,25 +86,29 @@ export default function HomePage() {
                 Full-Stack Developer crafting modern, scalable, and beautiful web applications with cutting-edge technologies.
               </p>
 
-              <div className="flex flex-col sm:flex-row items-start gap-4">
-                <Link href="/projects">
-                  <Button size="lg" className="group">
-                    View Projects
-                    <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-                  </Button>
-                </Link>
-                <Link href="/contact">
-                  <Button size="lg" variant="outline">
-                    Get in Touch
-                  </Button>
-                </Link>
-                <a href="/CV-DjamaVianney.pdf" download="Djama_Anthony_Vianney_CV.pdf">
-                  <Button size="lg" variant="outline" className="group">
-                    <Download className="mr-2 group-hover:translate-y-0.5 transition-transform" size={20} />
-                    Télécharger mon CV
-                  </Button>
-                </a>
-              </div>
+              <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 flex-wrap">
+              <Link href="/projects" className="w-full sm:w-auto">
+                <Button size="lg" className="group w-full">
+                  View Projects
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
+                </Button>
+              </Link>
+              <Link href="/contact" className="w-full sm:w-auto">
+                <Button size="lg" variant="outline" className="w-full">
+                  Get in Touch
+                </Button>
+              </Link>
+              <a 
+                href="/CV-DjamaVianney.pdf" 
+                download="Djama_Anthony_Vianney_CV.pdf"
+                className="w-full sm:w-auto"
+              >
+                <Button size="lg" variant="outline" className="group w-full">
+                  <Download className="mr-2 group-hover:translate-y-0.5 transition-transform" size={18} />
+                  Télécharger CV
+                </Button>
+              </a>
+            </div>
             </motion.div>
 
             {/* Colonne droite - Image */}

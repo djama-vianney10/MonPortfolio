@@ -73,29 +73,28 @@ export default function HomePage() {
                 className="inline-block mb-6"
               >
                 <span className="px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium">
-                  👋 Welcome to my portfolio ! Je suis Djama Anthony Vianney
+                   Le Développeur que la vie t'envoie !
                 </span>
               </motion.div>
 
               <h1 className="text-5xl md:text-7xl font-bold mb-6 text-gray-900 dark:text-white">
-                Building Digital
-                <span className="text-gradient block mt-2">Experiences</span>
+                Construire le numérique
               </h1>
 
               <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8">
-                Full-Stack Developer crafting modern, scalable, and beautiful web applications with cutting-edge technologies.
+                Développeur Full-Stack créant des applications web modernes, évolutives et esthétiques avec des technologies de pointe.
               </p>
 
               <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 flex-wrap">
               <Link href="/projects" className="w-full sm:w-auto">
                 <Button size="lg" className="group w-full">
-                  View Projects
+                  Voir les projets
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={18} />
                 </Button>
               </Link>
               <Link href="/contact" className="w-full sm:w-auto">
                 <Button size="lg" variant="outline" className="w-full">
-                  Get in Touch
+                  Entrer en contact
                 </Button>
               </Link>
               <a 
